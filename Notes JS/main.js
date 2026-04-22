@@ -1,4 +1,4 @@
-import { refreshMenus, showMenu } from "./utils.js";
+import { refreshMenus, popupBox, popup, setEditValues, resetEditValues } from "./utils.js";
 
 
 
@@ -6,10 +6,8 @@ import { refreshMenus, showMenu } from "./utils.js";
 
 
 const openBtn = document.querySelector(".add-box");
-var deleteBtns = document.querySelectorAll(".menu-btn");
 
-
-var notes = []
+var notes = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     // we want to render the notes when the page loads
@@ -20,12 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
     notes = JSON.parse(localStorage.getItem("notes")) || [];
 
     renderNotes();
+    refreshMenus(notes, renderNotes);
 
 });
 
 // we want to display the notes on the page when it loads
 
-const renderNotes = (note) => {
+const renderNotes = () => {
+
+    document.querySelectorAll(".note").forEach((note) => note.remove());
 
     for (let note of notes) {
         const newNote = `
@@ -40,15 +41,15 @@ const renderNotes = (note) => {
 
                 <div class="settings">
                     <!-- BUTTON -->
-                    <i class='bx  bx-dots-horizontal-rounded menu-btn'  ></i> 
+                    <i class='bx  bx-dots-horizontal-rounded menu-btn'></i> 
 
                     <ul class="menu">
-                        <li class="edit-btn">
-                            <i class='bx bx-edit' ></i>
+                        <li class="edit-btn" data-id="${note.id}">
+                            <i class='bx bx-edit'></i>
                             Edit
                         </li>
-                        <li class="delete-btn">
-                            <i class='bx bx-trash' ></i>
+                        <li class="delete-btn" data-id="${note.id}">
+                            <i class='bx bx-trash'></i>
                             Delete
                         </li>
                     </ul>   
@@ -56,18 +57,11 @@ const renderNotes = (note) => {
             </div>
 
         </div>
-
-
-    `
+    `;
 
         openBtn.insertAdjacentHTML("afterend", newNote);
-
-
     }
-}
-
-
-// console.log(closeBtn);
+};
 
 
 
@@ -82,7 +76,6 @@ const renderNotes = (note) => {
 const titleInput = document.querySelector("#title-input");
 const descInput = document.querySelector("#description-input");
 const form = document.querySelector("form");
-const container = document.querySelector(".wrapper");
 
 form.addEventListener("submit", (e) => {
 
@@ -90,72 +83,51 @@ form.addEventListener("submit", (e) => {
 
     e.preventDefault();
 
-    const newNote =
-        `
-            <div class="note">
-            <div class="details">
-                <h2 class="title">${titleInput.value}</h2>
-                <p class="description">${descInput.value}</p>
-            </div>
+    // stop empty notes
+    if (titleInput.value.trim() === "" || descInput.value.trim() === "") {
+        alert("Please fill in both fields");
+        return;
+    }
 
-            <div class="bottom">
-                <span class="date">${new Date()}</span>
+    // if we are editing, update old note
+    if (setEditValues.isEditMode) {
+        const noteIndex = notes.findIndex((note) => note.id == setEditValues.editNoteId);
 
-                <div class="settings">
-                    <!-- BUTTON -->
-                    <i class='bx  bx-dots-horizontal-rounded menu-btn'  ></i> 
+        if (noteIndex !== -1) {
+            notes[noteIndex].title = titleInput.value;
+            notes[noteIndex].description = descInput.value;
+            notes[noteIndex].date = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+        }
+    }
 
-                    <ul class="menu">
-                        <li class="edit-btn">
-                            <i class='bx bx-edit' ></i>
-                            Edit
-                        </li>
-                        <li class="delete-btn">
-                            <i class='bx bx-trash' ></i>
-                            Delete
-                        </li>
-                    </ul>   
-                </div>
-            </div>
+    // if we are not editing, create a brand new note
+    else {
+        const noteId = Date.now();
 
-        </div>
-    `
-    openBtn.insertAdjacentHTML("afterend", newNote);
-
-    // SAVING A NOTE TO LOCAL STORAGE
-
-    // 1. we need to create an object for each note and push it to the notes array
-    notes.push({
-        title: titleInput.value,
-        description: descInput.value,
-        date: new Date(),
-        id: Date.now() // Unique identifier for each note
-    });
+        notes.push({
+            title: titleInput.value,
+            description: descInput.value,
+            date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
+            id: noteId // Unique identifier for each note
+        });
+    }
 
     // 2. converting to json format and saving to local storage
     localStorage.setItem("notes", JSON.stringify(notes));
 
-    refreshMenus();
+    renderNotes();
+    refreshMenus(notes, renderNotes);
+
+    // close popup after adding note
+    popupBox.classList.remove("show");
+    popup.classList.remove("show");
+
+    // clear form inputs
+    form.reset();
+    resetEditValues();
 });
-
-// apendChild adds the new note at the end of the container..we will use insertAdjacentHTML to add the new note at the beginning of the container
-// container.appendChild(newNote);
-
-
-// after adding the new note we want to update the deleteBtns variable to include the new note's menu button
-
-
-
-
 
 // LOCAL STORAGE
 // we want to save the notes in local storage so that when we refresh the page the notes are still there
 //We will store notes as an array of objects, where each object contains the note's title, description, and date. To save this array in local storage, you'll use JSON.stringify to convert it into a string. When retrieving notes, you'll use JSON.parse to convert the string back into an array.
 //The workflow includes saving notes to local storage when a new note is added, retrieving and displaying notes when the page loads, and updating local storage when notes are edited or deleted. Each note will use its date as a unique identifier, making it easier to manage individual notes.
-
-
-
-
-
-
-
