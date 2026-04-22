@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CSS LINK -->
+    <link rel="stylesheet" href="style.css">
+    <!-- CDNJS boxicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css"
+        integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body>
+    <!-- WRAPPER -->
+    <div class="wrapper">
+        <!-- Add box -->
+        <div class="add-box">
+            <div class="icon">
+                <i class='bx bx-plus'></i>
+            </div>
+            <p>Add New Note</p>
+        </div>
+
+        <!-- Example Note -->
+        <!-- <div class="note">
+            <div class="details">
+                <h2 class="title">First Note</h2>
+                <p class="description">Description</p>
+            </div>
+            <div class="bottom">
+                <span class="date">August 18, 2025</span>
+
+                <div class="settings">
+                    
+                BUTTON
+                <i class='bx  bx-dots-horizontal-rounded menu-btn'  ></i> 
+
+                    <ul class="menu">
+                        <li class="edit-btn">
+                            <i class='bx bx-edit' ></i>
+                            Edit
+                        </li>
+                        <li class="delete-btn">
+                            <i class='bx bx-trash' ></i>
+                            Delete
+                        </li>
+                    </ul>   
+                </div>
+            </div>
+        </div>  -->
+
+
+    </div>
+
+    <!-- POP UP -->
+     <div class="popup-box">
+        <div class="popup">
+            <div class="content">
+                <!-- header -->
+                 <div class="popup-header">
+                    <h1>New Note</h1>
+                    <i class='bx  bx-x' id="close-btn" ></i> 
+                 </div>
+
+
+                <!-- form -->
+                 <form>
+                    <!-- title -->
+                     <div class="row title">
+                        <label for="" >Title</label>
+                        <input type="text"id="title-input">
+                     </div>
+                    <!-- description -->
+                     <div class="row decription">
+                        <label for="">Description</label>
+                        <textarea id="description-input"></textarea>
+                     </div>
+                    <!-- button -->
+                     <button>Add Note</button>
+                 </form>
+            </div>
+        </div>
+     </div>
+
+
+
+
+
+
+
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
